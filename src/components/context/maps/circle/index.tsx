@@ -50,7 +50,7 @@ export const CircleProvider = ({children}: any) => {
 	useEffect(() => {
 		const newMark = circleGeometry;
 		setMarkGeometries((prev) => [...prev, newMark]);
-	}, [ circleGeometry ])
+	}, [ viewport ])
 	    
 	return (
 		<CircleContext.Provider value={{ 

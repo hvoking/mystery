@@ -2,10 +2,11 @@
 import { useCallback } from 'react';
 
 // App imports
+import { Base } from './base';
 import { Tiles } from './tiles';
 import { Circle } from './circle';
 import { Avatar } from './avatar';
-import { MarkedPolygons } from './marks';
+import { Mask } from './mask';
 import './styles.scss';
 
 // Context imports
@@ -18,13 +19,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 export const Maps = () => {
   const { mapRef, basemap, viewport, setViewport } = useGeo();
-  const { isDragging, onDragStart, onMouseMove, onDragEnd } = useEvents();
-
-  const onDblClick = useCallback((e: any) => {
-    const lng = e.lngLat.lng;
-    const lat = e.lngLat.lat;
-    setViewport((prev: any) => ({...prev, longitude: lng, latitude: lat }));
-  }, []); 
+  const { isDragging, onDragStart, onMouseMove, onDragEnd, onDblClick } = useEvents();
 
   return (
     <div className="map-wrapper">
@@ -45,7 +40,8 @@ export const Maps = () => {
       >
         <Circle/>
         <Tiles/>
-        <MarkedPolygons/>
+        <Base/>
+        <Mask/>
         <Avatar/>
       </Map>
     </div>

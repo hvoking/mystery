@@ -3,7 +3,6 @@ import { useState, useEffect, useMemo, useContext, createContext } from 'react';
 
 // Context imports
 import { useGeo } from '../../geo';
-import { useCircle } from '../circle';
 
 // Third-party imports
 import * as turf from '@turf/turf';
@@ -18,7 +17,6 @@ export const useMask = () => {
 
 export const MaskProvider = ({children}: any) => {
 	const { mapRef } = useGeo();
-	const { circleGeometry } = useCircle();
 
 	const [ mapFeatures, setMapFeatures ] = useState([]);
 	const [ activeFeatures, setActiveFeatures ] = useState(false);
@@ -43,19 +41,18 @@ export const MaskProvider = ({children}: any) => {
 		setMapFeatures(features);
 	}, [ activeFeatures, mapRef.current ]);
 
-	const maskProperties = useMemo(() => {
+	const existingGeojson = useMemo(() => {
 	    return mapFeatures.filter((item: any) => {
 	        if (item.source === 'raster-style') {
 	            const featureGeometry = item.geometry;
-	            const featureCentroid = turf.centroid(featureGeometry);
-	            return turf.booleanPointInPolygon(featureCentroid, circleGeometry);
+	            return featureGeometry;
 	        }
-	    return false
+	    	return false
 	    });
-	}, [ mapFeatures, circleGeometry ]);
+	}, [ mapFeatures ]);
 
 	return (
-		<MaskContext.Provider value={{ maskProperties }}>
+		<MaskContext.Provider value={{ existingGeojson }}>
 			{children}
 		</MaskContext.Provider>
 	)

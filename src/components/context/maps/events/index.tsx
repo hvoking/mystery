@@ -13,53 +13,59 @@ export const useEvents = () => {
 }
 
 export const EventsProvider = ({children}: any) => {
-		const { mapRef, viewport, setViewport } = useGeo();
-		
-		const [ isDragging, setIsDragging ] = useState(false);
-		const [ dragOffset, setDragOffset ] = useState({ x: 0, y: 0 });
+	const { mapRef, viewport, setViewport } = useGeo();
+	
+	const [ isDragging, setIsDragging ] = useState(false);
+	const [ dragOffset, setDragOffset ] = useState({ x: 0, y: 0 });
 
-		const isClickInsideCircle = useCallback(
-	        (point: { x: number, y: number }) => {
-	            const features = mapRef.current?.queryRenderedFeatures(point, {
-	                layers: ['layer-mask']
-	            });
-	            return features && features.length > 0;
-	        },
-	        [mapRef]
-	    );
+	const isClickInsideCircle = useCallback(
+        (point: { x: number, y: number }) => {
+            const features = mapRef.current?.queryRenderedFeatures(point, {
+                layers: ['layer-mask']
+            });
+            return features && features.length > 0;
+        },
+        [mapRef]
+    );
 
-	    const onDragStart = useCallback(
-	        (event: any) => {
-	            if (isClickInsideCircle(event.point)) {
-	                setIsDragging(true);
-	                const { x, y } = event.point;
-	                const projected = mapRef.current.project([viewport.longitude, viewport.latitude]);
-	                setDragOffset({ x: x - projected.x, y: y - projected.y });
-	            }
-	        },
-	        [ isClickInsideCircle, viewport, mapRef ]
-	    );
+    const onDragStart = useCallback(
+        (event: any) => {
+            if (isClickInsideCircle(event.point)) {
+                setIsDragging(true);
+                const { x, y } = event.point;
+                const projected = mapRef.current.project([viewport.longitude, viewport.latitude]);
+                setDragOffset({ x: x - projected.x, y: y - projected.y });
+            }
+        },
+        [ isClickInsideCircle, viewport, mapRef ]
+    );
 
-	    const onMouseMove = useCallback(
-	        (event: any) => {
-	            if (isDragging) {
-	                const newCenter = mapRef.current.unproject({
-	                    x: event.point.x - dragOffset.x,
-	                    y: event.point.y - dragOffset.y
-	                });
-	                setViewport((prev: any) => ({
-	                	...prev,
-	                    longitude: newCenter.lng,
-	                    latitude: newCenter.lat
-	                }));
-	            }
-	        },
-	        [ isDragging, dragOffset, mapRef, setViewport ]
-	    );
+    const onMouseMove = useCallback(
+        (event: any) => {
+            if (isDragging) {
+                const newCenter = mapRef.current.unproject({
+                    x: event.point.x - dragOffset.x,
+                    y: event.point.y - dragOffset.y
+                });
+                setViewport((prev: any) => ({
+                	...prev,
+                    longitude: newCenter.lng,
+                    latitude: newCenter.lat
+                }));
+            }
+        },
+        [ isDragging, dragOffset, mapRef, setViewport ]
+    );
 
-	    const onDragEnd = useCallback(() => {
-	        setIsDragging(false);
-	    }, []);
+    const onDragEnd = useCallback(() => {
+        setIsDragging(false);
+    }, []);
+
+    const onDblClick = useCallback((e: any) => {
+      const lng = e.lngLat.lng;
+      const lat = e.lngLat.lat;
+      setViewport((prev: any) => ({...prev, longitude: lng, latitude: lat }));
+    }, []); 
 
 	return (
 		<EventsContext.Provider value={{
@@ -67,6 +73,7 @@ export const EventsProvider = ({children}: any) => {
 			onDragStart,
 			onMouseMove,
 			onDragEnd,
+			onDblClick
 		}}>
 			{children}
 		</EventsContext.Provider>

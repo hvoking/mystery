@@ -4,16 +4,16 @@ import { useCircle } from '../../../context/maps/circle';
 // Third-party imports
 import { Source, Layer, LayerProps } from 'react-map-gl';
 
-export const MarkedPolygons = () => {
+export const Mask = () => {
     const { markGeometries } = useCircle();
 
     const marksLayer: LayerProps = {
-        id: 'marks-layer',
+        id: 'mask-layer',
         type: 'fill',
-        source: 'marks',
+        source: 'mask',
         paint: {
-            'fill-color': 'rgb(255, 0, 0)', // Different color for the marks
-            'fill-opacity': 1,
+            'fill-color': 'rgb(204, 255, 41)',
+            'fill-opacity': 0.2,
         },
     };
 
@@ -26,10 +26,10 @@ export const MarkedPolygons = () => {
     };
 
     return (
-        <Source id="marks" type="geojson" data={geojson}>
+        <Source id="mask" type="geojson" data={geojson}>
             <Layer {...marksLayer} />
         </Source>
     );
 };
 
-MarkedPolygons.displayName = "MarkedPolygons";
+Mask.displayName = "Mask";
