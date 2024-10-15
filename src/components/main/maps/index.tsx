@@ -5,6 +5,7 @@ import { useCallback } from 'react';
 import { Tiles } from './tiles';
 import { Circle } from './circle';
 import { Avatar } from './avatar';
+import { MarkedPolygons } from './marks';
 import './styles.scss';
 
 // Context imports
@@ -44,6 +45,7 @@ export const Maps = () => {
       >
         <Circle/>
         <Tiles/>
+        <MarkedPolygons/>
         <Avatar/>
       </Map>
     </div>

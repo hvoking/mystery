@@ -3,6 +3,7 @@ import { useState, useCallback, useContext, createContext } from 'react';
 
 // App imports
 import { useGeo } from '../../geo';
+import { useCircle } from '../../maps/circle';
 
 const EventsContext: React.Context<any> = createContext(null);
 
@@ -13,7 +14,8 @@ export const useEvents = () => {
 }
 
 export const EventsProvider = ({children}: any) => {
-		const { mapRef, marker, setMarker } = useGeo();
+		const { addMark } = useCircle();
+		const { mapRef, viewport, setViewport } = useGeo();
 		
 		const [ isDragging, setIsDragging ] = useState(false);
 		const [ dragOffset, setDragOffset ] = useState({ x: 0, y: 0 });
@@ -33,11 +35,11 @@ export const EventsProvider = ({children}: any) => {
 	            if (isClickInsideCircle(event.point)) {
 	                setIsDragging(true);
 	                const { x, y } = event.point;
-	                const projected = mapRef.current.project([marker.longitude, marker.latitude]);
+	                const projected = mapRef.current.project([viewport.longitude, viewport.latitude]);
 	                setDragOffset({ x: x - projected.x, y: y - projected.y });
 	            }
 	        },
-	        [ isClickInsideCircle, marker, mapRef ]
+	        [ isClickInsideCircle, viewport, mapRef ]
 	    );
 
 	    const onMouseMove = useCallback(
@@ -47,13 +49,14 @@ export const EventsProvider = ({children}: any) => {
 	                    x: event.point.x - dragOffset.x,
 	                    y: event.point.y - dragOffset.y
 	                });
-	                setMarker({
+	                setViewport((prev: any) => ({
+	                	...prev,
 	                    longitude: newCenter.lng,
 	                    latitude: newCenter.lat
-	                });
+	                }));
 	            }
 	        },
-	        [ isDragging, dragOffset, mapRef, setMarker ]
+	        [ isDragging, dragOffset, mapRef, setViewport ]
 	    );
 
 	    const onDragEnd = useCallback(() => {

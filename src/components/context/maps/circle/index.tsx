@@ -1,5 +1,5 @@
 // React imports
-import { useState, useContext, createContext } from 'react';
+import { useState, useCallback, useEffect, useContext, createContext } from 'react';
 
 // Context imports
 import { useGeo } from '../../geo';
@@ -16,6 +16,7 @@ export const CircleProvider = ({children}: any) => {
 	const { viewport } = useGeo();
 	
 	const [ circleRadius, setCircleRadius ] = useState(0.05);
+	const [markGeometries, setMarkGeometries] = useState<any[]>([]);
 	
 	const createCircle = (center: any, radiusInKm: any, points: any) => {
 	    if(!points) points = 16;
@@ -46,10 +47,16 @@ export const CircleProvider = ({children}: any) => {
 
 	const circleGeometry: any = createCircle([viewport.longitude, viewport.latitude], circleRadius, 16);
 
+	useEffect(() => {
+		const newMark = createCircle([viewport.longitude, viewport.latitude], circleRadius, 16);
+		setMarkGeometries((prev) => [...prev, newMark]);
+	}, [viewport])
+	    
 	return (
 		<CircleContext.Provider value={{ 
 			circleGeometry,
 			circleRadius, setCircleRadius,
+			markGeometries
 		}}>
 			{children}
 		</CircleContext.Provider>
