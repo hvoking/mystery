@@ -1,14 +1,23 @@
 // Context imports
-import { GeoProvider } from './geo';
-import { MapsProvider } from './maps';
+import { MapboxProvider } from './mapbox';
+import { StylesProvider } from './styles';
+import { MaskProvider } from './mask';
+import { CircleProvider } from './circle';
+import { EventsProvider } from './events';
 
 export const MainProvider = ({ children }: any) => {
 	return (
-		<GeoProvider>
-		<MapsProvider>
+		<MapboxProvider>
+		<CircleProvider>
+		<EventsProvider>
+		<StylesProvider>
+		<MaskProvider>
 			{children}
-		</MapsProvider>
-    	</GeoProvider>
+		</MaskProvider>
+		</StylesProvider>
+		</EventsProvider>
+		</CircleProvider>
+    	</MapboxProvider>
 	)
 }
 

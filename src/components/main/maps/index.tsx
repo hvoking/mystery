@@ -10,15 +10,15 @@ import { Mask } from './mask';
 import './styles.scss';
 
 // Context imports
-import { useGeo } from '../../context/geo';
-import { useEvents } from '../../context/maps/events';
+import { useMapbox } from '../../context/mapbox';
+import { useEvents } from '../../context/events';
 
 // Third-party imports
 import { Map } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 export const Maps = () => {
-  const { mapRef, basemap, viewport, setViewport } = useGeo();
+  const { mapRef, basemap, viewport, setViewport } = useMapbox();
   const { isDragging, onDragStart, onMouseMove, onDragEnd, onDblClick } = useEvents();
 
   return (

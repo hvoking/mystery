@@ -2,7 +2,7 @@
 import { useState, useEffect, useMemo, useContext, createContext } from 'react';
 
 // Context imports
-import { useGeo } from '../../geo';
+import { useMapbox } from '../mapbox';
 
 // Third-party imports
 import * as turf from '@turf/turf';
@@ -16,7 +16,7 @@ export const useMask = () => {
 }
 
 export const MaskProvider = ({children}: any) => {
-	const { mapRef } = useGeo();
+	const { mapRef } = useMapbox();
 
 	const [ mapFeatures, setMapFeatures ] = useState([]);
 	const [ activeFeatures, setActiveFeatures ] = useState(false);

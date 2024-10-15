@@ -1,5 +1,5 @@
 // Context imports
-import { useStyles } from '../../../context/maps/styles';
+import { useStyles } from '../../../context/styles';
 
 // Third party imports
 import { Source, Layer } from 'react-map-gl';

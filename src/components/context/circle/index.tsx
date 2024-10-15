@@ -2,7 +2,7 @@
 import { useState, useEffect, useContext, createContext } from 'react';
 
 // Context imports
-import { useGeo } from '../../geo';
+import { useMapbox } from '../mapbox';
 
 const CircleContext: React.Context<any> = createContext(null);
 
@@ -13,7 +13,7 @@ export const useCircle = () => {
 }
 
 export const CircleProvider = ({children}: any) => {
-	const { viewport } = useGeo();
+	const { viewport } = useMapbox();
 
 	const latitude = viewport.latitude;
 	const longitude = viewport.longitude;
@@ -48,8 +48,7 @@ export const CircleProvider = ({children}: any) => {
 	const circleGeometry: any = createCircle(longitude, latitude, circleRadius, 16);
 
 	useEffect(() => {
-		const newMark = circleGeometry;
-		setMarkGeometries((prev) => [...prev, newMark]);
+		setMarkGeometries((prev) => [...prev, circleGeometry]);
 	}, [ viewport ])
 	    
 	return (

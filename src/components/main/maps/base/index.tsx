@@ -1,6 +1,7 @@
 // Context imports
-import { useStyles } from '../../../context/maps/styles';
-import { useMask } from '../../../context/maps/mask';
+import { useStyles } from '../../../context/styles';
+import { useMask } from '../../../context/mask';
+import { useCircle } from '../../../context/circle';
 
 // Third party imports
 import { Source, Layer } from 'react-map-gl';
@@ -9,6 +10,7 @@ import * as turf from '@turf/turf';
 export const Base = () => {
 	const { styleData } = useStyles();
 	const { existingGeojson } = useMask();
+	const { markGeometries } = useCircle();
 
 	const data = turf.featureCollection(existingGeojson);
 
