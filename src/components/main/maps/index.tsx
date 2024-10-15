@@ -1,6 +1,3 @@
-// React imports
-import { useCallback } from 'react';
-
 // App imports
 import { Base } from './base';
 import { Tiles } from './tiles';
@@ -18,7 +15,7 @@ import { Map } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 export const Maps = () => {
-  const { mapRef, basemap, viewport, setViewport } = useMapbox();
+  const { mapRef, basemap, viewport } = useMapbox();
   const { isDragging, onDragStart, onMouseMove, onDragEnd, onDblClick } = useEvents();
 
   return (

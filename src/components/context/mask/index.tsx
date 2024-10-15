@@ -4,9 +4,6 @@ import { useState, useEffect, useMemo, useContext, createContext } from 'react';
 // Context imports
 import { useMapbox } from '../mapbox';
 
-// Third-party imports
-import * as turf from '@turf/turf';
-
 const MaskContext: React.Context<any> = createContext(null)
 
 export const useMask = () => {
@@ -23,15 +20,13 @@ export const MaskProvider = ({children}: any) => {
 
 	useEffect(() => {
 		const map = mapRef.current;
-
 		if (!map) return;
-
 		const onData = (e: any) => e.tile && setActiveFeatures((prev) => !prev);
-
 	    map.on('data', onData);
 
-	    return () => {map.off('data', onData)};
-
+	    return () => {
+	    	map.off('data', onData)
+	    };
 	}, [ mapRef.current ]);
 
 	useEffect(() => {

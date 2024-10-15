@@ -19,10 +19,7 @@ export const Mask = () => {
 
     const geojson = {
         type: 'FeatureCollection',
-        features: markGeometries.map((geometry: any) => ({
-            type: 'Feature',
-            geometry,
-        })),
+        features: markGeometries.map((geometry: any) => geometry)
     };
 
     return (
