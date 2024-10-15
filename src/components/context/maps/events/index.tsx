@@ -3,7 +3,6 @@ import { useState, useCallback, useContext, createContext } from 'react';
 
 // App imports
 import { useGeo } from '../../geo';
-import { useCircle } from '../../maps/circle';
 
 const EventsContext: React.Context<any> = createContext(null);
 
@@ -14,7 +13,6 @@ export const useEvents = () => {
 }
 
 export const EventsProvider = ({children}: any) => {
-		const { addMark } = useCircle();
 		const { mapRef, viewport, setViewport } = useGeo();
 		
 		const [ isDragging, setIsDragging ] = useState(false);

@@ -1,5 +1,5 @@
 // React imports
-import { useState, useCallback, useEffect, useContext, createContext } from 'react';
+import { useState, useEffect, useContext, createContext } from 'react';
 
 // Context imports
 import { useGeo } from '../../geo';
@@ -14,28 +14,28 @@ export const useCircle = () => {
 
 export const CircleProvider = ({children}: any) => {
 	const { viewport } = useGeo();
+
+	const latitude = viewport.latitude;
+	const longitude = viewport.longitude;
 	
 	const [ circleRadius, setCircleRadius ] = useState(0.05);
-	const [markGeometries, setMarkGeometries] = useState<any[]>([]);
+	const [ markGeometries, setMarkGeometries ] = useState<any[]>([]);
 	
-	const createCircle = (center: any, radiusInKm: any, points: any) => {
+	const createCircle = (lng: any, lat: any, radiusInKm: any, points: any) => {
 	    if(!points) points = 16;
 
-	    const coords = { latitude: viewport.latitude, longitude: viewport.longitude };
-	    const km = radiusInKm;
-	    
-	    const distanceX = km/(111.320*Math.cos(coords.latitude*Math.PI/180));
-	    const distanceY = km/110.574;
+	    const distanceX = radiusInKm / (111.320 * Math.cos(lat * Math.PI / 180));
+	    const distanceY = radiusInKm / 110.574;
 
 	    let theta, x, y;
 	    const ret = [];
 
 	    for(let i=0; i<points; i++) {
-	        theta = (i/points)*(2*Math.PI);
-	        x = distanceX*Math.cos(theta);
-	        y = distanceY*Math.sin(theta);
+	        theta = (i / points) * (2 * Math.PI);
+	        x = distanceX * Math.cos(theta);
+	        y = distanceY * Math.sin(theta);
 
-	        ret.push([coords.longitude+x, coords.latitude+y]);
+	        ret.push([lng + x, lat + y]);
 	    }
 	    ret.push(ret[0]);
 
@@ -45,12 +45,12 @@ export const CircleProvider = ({children}: any) => {
 	    };
 	};
 
-	const circleGeometry: any = createCircle([viewport.longitude, viewport.latitude], circleRadius, 16);
+	const circleGeometry: any = createCircle(longitude, latitude, circleRadius, 16);
 
 	useEffect(() => {
-		const newMark = createCircle([viewport.longitude, viewport.latitude], circleRadius, 16);
+		const newMark = circleGeometry;
 		setMarkGeometries((prev) => [...prev, newMark]);
-	}, [viewport])
+	}, [ circleGeometry ])
 	    
 	return (
 		<CircleContext.Provider value={{ 

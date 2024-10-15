@@ -8,7 +8,7 @@ import { useGeo } from '../../../context/geo';
 import { Marker } from 'react-map-gl';
 
 export const Avatar = () => {
-	const { viewport, setViewport, mapRef } = useGeo();
+	const { viewport, setViewport } = useGeo();
 
     const [ direction, setDirection ] = useState('down');
     const [ step, setStep ] = useState(0);
