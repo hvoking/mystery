@@ -18,9 +18,9 @@ export const useTiles = () => {
 
 export const TilesProvider = ({children}: any) => {
 	const { styleName } = useStyles();
-	const { viewport } = useMapbox();
+	const { viewport, mapRef } = useMapbox();
 
-	const [ tilesData, setTilesData ] = useState<any[]>([]);
+	const [ tilesData, setTilesData ] = useState<any>(null);
 
 	useEffect(() => {
 		const fetchData = async () => {

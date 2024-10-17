@@ -18,15 +18,17 @@ export const Tiles = () => {
 			<Layer key={index} {...style}/>
 		)
 	});
-	
+
 	return (
-		<Source
+		<>
+		{tilesData && <Source
 			id="vector-tiles"
 			type="geojson"
 			data={tilesData}
 		>
 			{layers}
-		</Source>
+		</Source>}
+		</>
 	)
 }
 
