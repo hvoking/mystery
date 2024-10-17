@@ -1,5 +1,4 @@
 // App imports
-import { Base } from './base';
 import { Tiles } from './tiles';
 import { Circle } from './circle';
 import { Avatar } from './avatar';
@@ -37,7 +36,6 @@ export const Maps = () => {
       >
         <Circle/>
         <Tiles/>
-        <Base/>
         <Mask/>
         <Avatar/>
       </Map>

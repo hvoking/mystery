@@ -13,7 +13,18 @@ export const Tiles = () => {
 	const { tilesData } = useTiles();
 	const { styleData } = useStyles();
 
-	const layers = styleData.map((style: any, index: number) => {
+	const transformStyles = (styles: any) => {
+		return styles.map((style: any) => {
+			const { "source-layer": sourceLayer, source, ...rest } = style;
+
+			return {
+				...rest,
+				source: "vector-tiles"
+			};
+		});
+	}
+	const updatedStyles = transformStyles(styleData);
+	const layers = updatedStyles.map((style: any, index: number) => {
 		return (
 			<Layer key={index} {...style}/>
 		)
@@ -21,7 +32,8 @@ export const Tiles = () => {
 
 	return (
 		<>
-		{tilesData && <Source
+		{tilesData && 
+		<Source
 			id="vector-tiles"
 			type="geojson"
 			data={tilesData}

@@ -45,7 +45,7 @@ export const TilesProvider = ({children}: any) => {
             setTilesData(geojsonData);
 		}
 		fetchData();
-	}, [ viewport, styleName ])
+	}, [ viewport ])
 
 	return (
 		<TilesContext.Provider value={{ tilesData }}>
