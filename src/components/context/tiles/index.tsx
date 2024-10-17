@@ -29,23 +29,39 @@ export const TilesProvider = ({children}: any) => {
 
 		    const floorZoom = Math.floor(zoom);
 
-			const tempUrl = `
-				${process.env.REACT_APP_API_URL}/
-				tiles
-				?schema_name=layers
-				&style_name=${styleName}
-				&z=${floorZoom}
-				&x=${xTile}
-				&y=${yTile}
-			`;
-		  	const url = tempUrl.replace(/\s/g, '');
-		  	const res = await fetch(url);
-		  	const receivedData = await res.arrayBuffer();
-		  	const geojsonData: any = mvtToGeoJSON(receivedData, xTile, yTile, floorZoom);
-            setTilesData(geojsonData);
+			const promises = [];
+
+			for (let x = xTile - 1; x <= xTile + 1; x++) {
+				for (let y = yTile - 1; y <= yTile + 1; y++) {
+				  const tempUrl = `
+				    ${process.env.REACT_APP_API_URL}/
+				    tiles
+				    ?schema_name=layers
+				    &style_name=${styleName}
+				    &z=${Math.floor(zoom)}
+				    &x=${x}
+				    &y=${y}
+				  `.replace(/\s/g, '');
+
+				  promises.push(fetch(tempUrl).then(res => res.arrayBuffer()));
+				}
+			}
+		  	const tileBuffers = await Promise.all(promises);
+
+		  	const geojsonDataArray = tileBuffers.map((buffer: any, index: any) => {
+	  	        const x = xTile + (index % 3) - 1;
+	  	        const y = yTile + Math.floor(index / 3) - 1;
+	  	        return mvtToGeoJSON(buffer, x, y, zoom);
+	  	    });
+
+	  	    const mergedGeojsonData = {
+				type: 'FeatureCollection',
+				features: geojsonDataArray.flatMap(geojson => geojson.features),
+			};
+			setTilesData(mergedGeojsonData);
 		}
 		fetchData();
-	}, [ viewport ])
+	}, [viewport, styleName]);
 
 	return (
 		<TilesContext.Provider value={{ tilesData }}>

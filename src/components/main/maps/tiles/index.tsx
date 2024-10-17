@@ -24,6 +24,7 @@ export const Tiles = () => {
 		});
 	}
 	const updatedStyles = transformStyles(styleData);
+
 	const layers = updatedStyles.map((style: any, index: number) => {
 		return (
 			<Layer key={index} {...style}/>
