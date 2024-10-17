@@ -1,34 +1,29 @@
+// React imports
+import { useState, useEffect } from 'react';
+
 // Context imports
+import { useTiles } from '../../../context/tiles';
 import { useStyles } from '../../../context/styles';
+import { useMapbox } from '../../../context/mapbox';
 
 // Third party imports
 import { Source, Layer } from 'react-map-gl';
 
 export const Tiles = () => {
-	const { styleData, styleName } = useStyles();
-	
-	const tempUrl = `
-		${process.env.REACT_APP_API_URL}/
-		tiles
-		?schema_name=layers
-		&style_name=${styleName}
-		&z={z}
-		&x={x}
-		&y={y}
-	`;
-	const url = tempUrl.replace(/\s/g, '');
+	const { tilesData } = useTiles();
+	const { styleData } = useStyles();
 
 	const layers = styleData.map((style: any, index: number) => {
 		return (
 			<Layer key={index} {...style}/>
 		)
 	});
-
+	
 	return (
-		<Source 
-			id="raster-style" 
-			type="vector" 
-			tiles={[ url ]}
+		<Source
+			id="vector-tiles"
+			type="geojson"
+			data={tilesData}
 		>
 			{layers}
 		</Source>
