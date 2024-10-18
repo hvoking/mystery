@@ -34,13 +34,13 @@ export const Tiles = () => {
 	return (
 		<>
 		{tilesData && 
-		<Source
-			id="vector-tiles"
-			type="geojson"
-			data={tilesData}
-		>
-			{layers}
-		</Source>}
+			<Source
+				id="vector-tiles"
+				type="geojson"
+				data={tilesData}
+			>
+				{layers}
+			</Source>}
 		</>
 	)
 }

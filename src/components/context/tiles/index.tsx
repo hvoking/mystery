@@ -25,9 +25,8 @@ export const TilesProvider = ({children}: any) => {
 	useEffect(() => {
 		const fetchData = async () => {
 			const { zoom, longitude, latitude } = viewport;
-		    const { xTile, yTile } = lonLatToTile(longitude, latitude, zoom);
-
-		    const floorZoom = Math.floor(zoom);
+			const floorZoom = Math.floor(zoom);
+		    const { xTile, yTile } = lonLatToTile(longitude, latitude, floorZoom);
 
 			const promises = [];
 
@@ -38,7 +37,7 @@ export const TilesProvider = ({children}: any) => {
 				    tiles
 				    ?schema_name=layers
 				    &style_name=${styleName}
-				    &z=${Math.floor(zoom)}
+				    &z=${floorZoom}
 				    &x=${x}
 				    &y=${y}
 				  `.replace(/\s/g, '');
@@ -51,7 +50,7 @@ export const TilesProvider = ({children}: any) => {
 		  	const geojsonDataArray = tileBuffers.map((buffer: any, index: any) => {
 	  	        const x = xTile + (index % 3) - 1;
 	  	        const y = yTile + Math.floor(index / 3) - 1;
-	  	        return mvtToGeoJSON(buffer, x, y, zoom);
+	  	        return mvtToGeoJSON(buffer, x, y, floorZoom);
 	  	    });
 
 	  	    const mergedGeojsonData = {
