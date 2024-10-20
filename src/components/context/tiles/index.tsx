@@ -2,7 +2,7 @@
 import { useState, useEffect, useContext, createContext } from 'react';
 
 // App imports
-import { mvtToGeoJSON, lonLatToTile } from './toGeojson';
+import { mvtToGeoJSON } from './toGeojson';
 
 // Context imports
 import { useStyles } from '../styles';
@@ -18,40 +18,54 @@ export const useTiles = () => {
 
 export const TilesProvider = ({children}: any) => {
 	const { styleName } = useStyles();
-	const { viewport, mapRef } = useMapbox();
+	const { viewport, mapRef, mapDimensions } = useMapbox();
+	const { width, height } = mapDimensions;
+
+	const { zoom, longitude, latitude } = viewport;
+	const floorZoom = Math.floor(zoom);
+
+	const tileSize = 256;
+	const numTiles = Math.pow(2, floorZoom);
+
+	const xTile = Math.floor(((longitude + 180) / 360) * numTiles);
+	const yTile = Math.floor((1 - Math.log(Math.tan(latitude * Math.PI / 180) + 1 / Math.cos(latitude * Math.PI / 180)) / Math.PI) / 2 * numTiles);
+
+	const tilesAcrossX = Math.ceil(width / tileSize);
+	const tilesAcrossY = Math.ceil(height / (tileSize * Math.cos(latitude * Math.PI / 180)));
+
+	const startX = xTile - Math.floor(tilesAcrossX / 2);
+	const endX = xTile + Math.floor(tilesAcrossX / 2);
+	const startY = yTile - Math.floor(tilesAcrossY / 2);
+	const endY = yTile + Math.floor(tilesAcrossY / 2);
 
 	const [ tilesData, setTilesData ] = useState<any>(null);
 
 	useEffect(() => {
 		const fetchData = async () => {
-			const { zoom, longitude, latitude } = viewport;
-			const floorZoom = Math.floor(zoom);
-		    const { xTile, yTile } = lonLatToTile(longitude, latitude, floorZoom);
-
 			const promises = [];
 
-			for (let x = xTile - 1; x <= xTile + 1; x++) {
-				for (let y = yTile - 1; y <= yTile + 1; y++) {
+			for (let x = startX; x <= endX; x++) {
+	      		for (let y = startY; y <= endY; y++) {
 				  const tempUrl = `
 				    ${process.env.REACT_APP_API_URL}/
 				    tiles
-				    ?schema_name=layers
-				    &style_name=${styleName}
+				    ?table_schema=layers
+				    &table_name=${styleName}
 				    &z=${floorZoom}
 				    &x=${x}
 				    &y=${y}
 				  `.replace(/\s/g, '');
-
+				  
 				  promises.push(fetch(tempUrl).then(res => res.arrayBuffer()));
 				}
 			}
 		  	const tileBuffers = await Promise.all(promises);
 
 		  	const geojsonDataArray = tileBuffers.map((buffer: any, index: any) => {
-	  	        const x = xTile + (index % 3) - 1;
-	  	        const y = yTile + Math.floor(index / 3) - 1;
-	  	        return mvtToGeoJSON(buffer, x, y, floorZoom);
-	  	    });
+				const xOffset = startX + (index % (endX - startX + 1));
+				const yOffset = startY + Math.floor(index / (endX - startX + 1));
+				return mvtToGeoJSON(buffer, xOffset, yOffset, floorZoom);
+		    });
 
 	  	    const mergedGeojsonData = {
 				type: 'FeatureCollection',
