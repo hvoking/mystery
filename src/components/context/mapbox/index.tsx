@@ -13,24 +13,10 @@ export const useMapbox = () => {
 }
 
 export const MapboxProvider = ({children}: any) => {
-	const mapRef = useRef<any>();
+	const mapRef = useRef<any>(null);
 
 	const [ basemap, setBasemap ] = useState("mapbox://styles/hvoking/clrwzn1jo015q01nl53664m2c");
 	const [ viewport, setViewport ] = useState(Locations.holesov);
-	const [ mapDimensions, setMapDimensions ] = useState({ width: 0, height: 0 });
-
-	useEffect(() => {
-		const updateMapDimensions = () => {
-			if (mapRef.current) {
-				const { offsetWidth: width, offsetHeight: height } = mapRef.current.getMap().getContainer();
-				setMapDimensions({ width, height });
-			}
-		};
-	    window.addEventListener('resize', updateMapDimensions);
-	    updateMapDimensions();
-
-	    return () => window.removeEventListener('resize', updateMapDimensions);
-	  }, []);
 
 	useEffect(() => {
 		mapRef.current?.flyTo({
@@ -45,8 +31,7 @@ export const MapboxProvider = ({children}: any) => {
 		<MapboxContext.Provider value={{
 			mapRef,
 			basemap, setBasemap,
-			viewport, setViewport,
-			mapDimensions
+			viewport, setViewport
 		}}>
 			{children}
 		</MapboxContext.Provider>

@@ -18,25 +18,14 @@ export const useTiles = () => {
 
 export const TilesProvider = ({children}: any) => {
 	const { styleName } = useStyles();
-	const { viewport, mapRef, mapDimensions } = useMapbox();
-	const { width, height } = mapDimensions;
+	const { viewport } = useMapbox();
 
 	const { zoom, longitude, latitude } = viewport;
 	const floorZoom = Math.floor(zoom);
 
-	const tileSize = 256;
 	const numTiles = Math.pow(2, floorZoom);
-
 	const xTile = Math.floor(((longitude + 180) / 360) * numTiles);
 	const yTile = Math.floor((1 - Math.log(Math.tan(latitude * Math.PI / 180) + 1 / Math.cos(latitude * Math.PI / 180)) / Math.PI) / 2 * numTiles);
-
-	const tilesAcrossX = Math.ceil(width / tileSize);
-	const tilesAcrossY = Math.ceil(height / (tileSize * Math.cos(latitude * Math.PI / 180)));
-
-	const startX = xTile - Math.floor(tilesAcrossX / 2);
-	const endX = xTile + Math.floor(tilesAcrossX / 2);
-	const startY = yTile - Math.floor(tilesAcrossY / 2);
-	const endY = yTile + Math.floor(tilesAcrossY / 2);
 
 	const [ tilesData, setTilesData ] = useState<any>(null);
 
@@ -44,8 +33,10 @@ export const TilesProvider = ({children}: any) => {
 		const fetchData = async () => {
 			const promises = [];
 
-			for (let x = startX; x <= endX; x++) {
-	      		for (let y = startY; y <= endY; y++) {
+			for (let dy = -1; dy <= 1; dy++) {
+				for (let dx = -1; dx <= 1; dx++) {
+					const x = xTile + dx;
+					const y = yTile + dy;
 				  const tempUrl = `
 				    ${process.env.REACT_APP_API_URL}/
 				    tiles
@@ -62,9 +53,9 @@ export const TilesProvider = ({children}: any) => {
 		  	const tileBuffers = await Promise.all(promises);
 
 		  	const geojsonDataArray = tileBuffers.map((buffer: any, index: any) => {
-				const xOffset = startX + (index % (endX - startX + 1));
-				const yOffset = startY + Math.floor(index / (endX - startX + 1));
-				return mvtToGeoJSON(buffer, xOffset, yOffset, floorZoom);
+				const x = xTile + (index % 3) - 1;
+				const y = yTile + Math.floor(index / 3) - 1;
+				return mvtToGeoJSON(buffer, x, y, floorZoom);
 		    });
 
 	  	    const mergedGeojsonData = {
