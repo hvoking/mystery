@@ -2,7 +2,7 @@
 import { useState, useEffect, useContext, createContext } from 'react';
 
 // App imports
-import { mvtToGeoJSON } from './toGeojson';
+import { mvtToGeoJSON, lonLatToTile } from './toGeojson';
 
 // Context imports
 import { useStyles } from '../styles';
@@ -23,16 +23,12 @@ export const TilesProvider = ({children}: any) => {
 	const { zoom, longitude, latitude } = viewport;
 	const floorZoom = Math.floor(zoom);
 
-	const numTiles = Math.pow(2, floorZoom);
-	const xTile = Math.floor(((longitude + 180) / 360) * numTiles);
-	const yTile = Math.floor((1 - Math.log(Math.tan(latitude * Math.PI / 180) + 1 / Math.cos(latitude * Math.PI / 180)) / Math.PI) / 2 * numTiles);
-
+	const { xTile, yTile } = lonLatToTile(longitude, latitude, floorZoom)
 	const [ tilesData, setTilesData ] = useState<any>(null);
 
 	useEffect(() => {
 		const fetchData = async () => {
 			const promises = [];
-
 			for (let dy = -1; dy <= 1; dy++) {
 				for (let dx = -1; dx <= 1; dx++) {
 					const x = xTile + dx;

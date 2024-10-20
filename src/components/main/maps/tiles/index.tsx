@@ -1,10 +1,6 @@
-// React imports
-import { useState, useEffect } from 'react';
-
 // Context imports
 import { useTiles } from '../../../context/tiles';
 import { useStyles } from '../../../context/styles';
-import { useMapbox } from '../../../context/mapbox';
 
 // Third party imports
 import { Source, Layer } from 'react-map-gl';
@@ -32,16 +28,13 @@ export const Tiles = () => {
 	});
 
 	return (
-		<>
-		{tilesData && 
-			<Source
-				id="vector-tiles"
-				type="geojson"
-				data={tilesData}
-			>
-				{layers}
-			</Source>}
-		</>
+		<Source
+			id="vector-tiles"
+			type="geojson"
+			data={tilesData}
+		>
+			{layers}
+		</Source>
 	)
 }
 

@@ -22,3 +22,10 @@ export const mvtToGeoJSON = (mvtArrayBuffer: ArrayBuffer, xTile: number, yTile: 
 
   return geojson;
 };
+
+export const lonLatToTile = (longitude: any, latitude: any, zoom: any) => {
+    const numTiles = Math.pow(2, zoom);
+    const xTile = Math.floor(((longitude + 180) / 360) * numTiles);
+    const yTile = Math.floor((1 - Math.log(Math.tan(latitude * Math.PI / 180) + 1 / Math.cos(latitude * Math.PI / 180)) / Math.PI) / 2 * numTiles);
+    return { xTile, yTile };
+};
