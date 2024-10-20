@@ -37,25 +37,25 @@ export const TilesProvider = ({children}: any) => {
 				for (let dx = -1; dx <= 1; dx++) {
 					const x = xTile + dx;
 					const y = yTile + dy;
-				  const tempUrl = `
-				    ${process.env.REACT_APP_API_URL}/
-				    tiles
-				    ?table_schema=layers
-				    &table_name=${styleName}
-				    &z=${floorZoom}
-				    &x=${x}
-				    &y=${y}
-				  `.replace(/\s/g, '');
-				  
-				  promises.push(fetch(tempUrl).then(res => res.arrayBuffer()));
+					const url = `
+						${process.env.REACT_APP_API_URL}/
+						tiles
+						?table_schema=layers
+						&table_name=${styleName}
+						&z=${floorZoom}
+						&x=${x}
+						&y=${y}
+					`.replace(/\s/g, '');
+
+					promises.push(fetch(url).then(res => res.arrayBuffer()));
 				}
 			}
 		  	const tileBuffers = await Promise.all(promises);
 
 		  	const geojsonDataArray = tileBuffers.map((buffer: any, index: any) => {
-				const x = xTile + (index % 3) - 1;
-				const y = yTile + Math.floor(index / 3) - 1;
-				return mvtToGeoJSON(buffer, x, y, floorZoom);
+				const xOffset = xTile + (index % 3) - 1;
+				const yOffset = yTile + Math.floor(index / 3) - 1;
+				return mvtToGeoJSON(buffer, xOffset, yOffset, floorZoom);
 		    });
 
 	  	    const mergedGeojsonData = {
