@@ -17,7 +17,9 @@ export const useTiles = () => {
 }
 
 export const TilesProvider = ({children}: any) => {
-	const { styleName } = useStyles();
+	const tableSchema = "layers";
+	const tableName = "jan";
+	
 	const { viewport } = useMapbox();
 
 	const { zoom, longitude, latitude } = viewport;
@@ -36,8 +38,8 @@ export const TilesProvider = ({children}: any) => {
 					const url = `
 						${process.env.REACT_APP_API_URL}/
 						tiles
-						?table_schema=layers
-						&table_name=${styleName}
+						?table_schema=${tableSchema}
+						&table_name=${tableName}
 						&z=${floorZoom}
 						&x=${x}
 						&y=${y}
@@ -61,7 +63,7 @@ export const TilesProvider = ({children}: any) => {
 			setTilesData(mergedGeojsonData);
 		}
 		fetchData();
-	}, [viewport, styleName]);
+	}, [viewport]);
 
 	return (
 		<TilesContext.Provider value={{ tilesData }}>

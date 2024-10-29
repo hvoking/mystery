@@ -10,26 +10,21 @@ export const useStyles = () => {
 }
 
 export const StylesProvider = ({children}: any) => {
-	const [ styleData, setStyleData ] = useState<any[]>([]);
-	const [ styleName, setStyleName ] = useState("jan");
-
-	useEffect(() => {
-		const fetchData = async () => {
-			const tempUrl = `
-		    	${process.env.REACT_APP_API_URL}/
-		    	style/
-		    	${styleName}
-		    `
-		  	const url = tempUrl.replace(/\s/g, '');
-		  	const res = await fetch(url);
-		    const receivedData = await res.json();
-		    setStyleData(receivedData);
-		}
-		fetchData();
-	}, [ styleName ])
+	const fetchData = async (tableSchema: string, tableName: string) => {
+		const tempUrl = `
+	    	${process.env.REACT_APP_API_URL}/
+	    	style
+	    	?table_schema=${tableSchema}
+	    	&table_name=${tableName}
+	    `
+	  	const url = tempUrl.replace(/\s/g, '');
+	  	const res = await fetch(url);
+	    const receivedData = await res.json();
+	    return receivedData
+	}
 
 	return (
-		<StylesContext.Provider value={{ styleData, styleName, setStyleName }}>
+		<StylesContext.Provider value={{ fetchData }}>
 			{children}
 		</StylesContext.Provider>
 	)
