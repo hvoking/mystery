@@ -17,6 +17,8 @@ export const useTiles = () => {
 }
 
 export const TilesProvider = ({children}: any) => {
+	const { getTilesUrl } = useStyles();
+
 	const tableSchema = "layers";
 	const tableName = "jan";
 	
@@ -35,16 +37,7 @@ export const TilesProvider = ({children}: any) => {
 				for (let dx = -1; dx <= 1; dx++) {
 					const x = xTile + dx;
 					const y = yTile + dy;
-					const url = `
-						${process.env.REACT_APP_API_URL}/
-						tiles
-						?table_schema=${tableSchema}
-						&table_name=${tableName}
-						&z=${floorZoom}
-						&x=${x}
-						&y=${y}
-					`.replace(/\s/g, '');
-
+					const url = getTilesUrl(tableSchema, tableName, x, y, floorZoom);
 					promises.push(fetch(url).then(res => res.arrayBuffer()));
 				}
 			}
