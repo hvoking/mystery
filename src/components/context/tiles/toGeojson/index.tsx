@@ -13,13 +13,11 @@ export const mvtToGeoJSON = (mvtArrayBuffer: ArrayBuffer, xTile: number, yTile: 
 
   Object.keys(tile.layers).forEach((layerName: any) => {
     const layer = tile.layers[layerName];
-
     for (let i = 0; i < layer.length; i++) {
       const feature = layer.feature(i).toGeoJSON(xTile, yTile, zoom);
       geojson.features.push(feature);
     }
   });
-
   return geojson;
 };
 

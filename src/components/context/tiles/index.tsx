@@ -18,9 +18,6 @@ export const useTiles = () => {
 
 export const TilesProvider = ({children}: any) => {
 	const { getTilesUrl } = useStyles();
-
-	const tableSchema = "layers";
-	const tableName = "jan";
 	
 	const { viewport } = useMapbox();
 
@@ -28,38 +25,38 @@ export const TilesProvider = ({children}: any) => {
 	const floorZoom = Math.floor(zoom);
 
 	const { xTile, yTile } = lonLatToTile(longitude, latitude, floorZoom)
-	const [ tilesData, setTilesData ] = useState<any>(null);
 
-	useEffect(() => {
-		const fetchData = async () => {
-			const promises = [];
-			for (let dy = -1; dy <= 1; dy++) {
-				for (let dx = -1; dx <= 1; dx++) {
-					const x = xTile + dx;
-					const y = yTile + dy;
-					const url = getTilesUrl(tableSchema, tableName, x, y, floorZoom);
-					promises.push(fetch(url).then(res => res.arrayBuffer()));
-				}
+	
+	const fetchTiles = async (tableSchema: any, tableName: any) => {
+		const promises = [];
+		
+		for (let dy = -1; dy <= 1; dy++) {
+			for (let dx = -1; dx <= 1; dx++) {
+				const x = xTile + dx;
+				const y = yTile + dy;
+				const url = getTilesUrl(tableSchema, tableName, x, y, floorZoom);
+				promises.push(fetch(url).then(res => res.arrayBuffer()));
 			}
-		  	const tileBuffers = await Promise.all(promises);
-
-		  	const geojsonDataArray = tileBuffers.map((buffer: any, index: any) => {
-				const xOffset = xTile + (index % 3) - 1;
-				const yOffset = yTile + Math.floor(index / 3) - 1;
-				return mvtToGeoJSON(buffer, xOffset, yOffset, floorZoom);
-		    });
-
-	  	    const mergedGeojsonData = {
-				type: 'FeatureCollection',
-				features: geojsonDataArray.flatMap(geojson => geojson.features),
-			};
-			setTilesData(mergedGeojsonData);
 		}
-		fetchData();
-	}, [viewport]);
+	  	const tileBuffers = await Promise.all(promises);
+
+	  	const geojsonDataArray = tileBuffers.map((buffer: any, index: any) => {
+			const xOffset = xTile + (index % 3) - 1;
+			const yOffset = yTile + Math.floor(index / 3) - 1;
+			return mvtToGeoJSON(buffer, xOffset, yOffset, floorZoom);
+	    });
+
+  	    const mergedGeojsonData = {
+			type: 'FeatureCollection',
+			features: geojsonDataArray.flatMap(geojson => geojson.features),
+		};
+
+		return mergedGeojsonData;
+	}
+		
 
 	return (
-		<TilesContext.Provider value={{ tilesData }}>
+		<TilesContext.Provider value={{ fetchTiles }}>
 			{children}
 		</TilesContext.Provider>
 	)

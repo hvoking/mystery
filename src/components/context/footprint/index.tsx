@@ -7,38 +7,36 @@ import { useMapbox } from '../mapbox';
 // Third-party libraries
 import * as turf from '@turf/turf';
 
-const CircleContext: React.Context<any> = createContext(null);
+const FootprintContext: React.Context<any> = createContext(null);
 
-export const useCircle = () => {
+export const useFootprint = () => {
 	return (
-		useContext(CircleContext)
+		useContext(FootprintContext)
 	)
 }
 
-export const CircleProvider = ({children}: any) => {
+export const FootprintProvider = ({children}: any) => {
 	const { viewport } = useMapbox();
+	const { latitude, longitude } = viewport;
 
-	const latitude = viewport.latitude;
-	const longitude = viewport.longitude;
-	
 	const [ circleRadius, setCircleRadius ] = useState(0.05);
-	const [ markGeometries, setMarkGeometries ] = useState<any[]>([]);
+	const [ footprintData, setFootprintData ] = useState<any[]>([]);
 	
 	const circleGeometry: any = turf.circle([longitude, latitude], circleRadius);
 
 	useEffect(() => {
-		setMarkGeometries((prev) => [...prev, circleGeometry]);
+		setFootprintData((prev) => [...prev, circleGeometry]);
 	}, [ viewport ])
 	    
 	return (
-		<CircleContext.Provider value={{ 
+		<FootprintContext.Provider value={{ 
 			circleGeometry,
 			circleRadius, setCircleRadius,
-			markGeometries
+			footprintData
 		}}>
 			{children}
-		</CircleContext.Provider>
+		</FootprintContext.Provider>
 	)
 }
 
-CircleContext.displayName = "CircleContext";
+FootprintContext.displayName = "FootprintContext";

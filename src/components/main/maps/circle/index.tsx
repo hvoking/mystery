@@ -1,11 +1,11 @@
 // Context imports
-import { useCircle } from '../../../context/circle';
+import { useFootprint } from '../../../context/footprint';
 
 // Third party imports
 import { Source, Layer, LayerProps } from 'react-map-gl';
 
 export const Circle = () => {
-    const { circleGeometry } = useCircle();
+    const { circleGeometry } = useFootprint();
 
     const circleLayer: LayerProps = {
         id: 'layer-mask',

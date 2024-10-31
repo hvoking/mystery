@@ -2,7 +2,7 @@
 import { Tiles } from './tiles';
 import { Circle } from './circle';
 import { Avatar } from './avatar';
-import { Mask } from './mask';
+import { Footprint } from './footprint';
 import './styles.scss';
 
 // Context imports
@@ -36,7 +36,7 @@ export const Maps = () => {
       >
         <Circle/>
         <Tiles/>
-        <Mask/>
+        <Footprint/>
         <Avatar/>
       </Map>
     </div>

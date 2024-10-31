@@ -2,14 +2,14 @@
 import { MapboxProvider } from './mapbox';
 import { StylesProvider } from './styles';
 import { MaskProvider } from './mask';
-import { CircleProvider } from './circle';
+import { FootprintProvider } from './footprint';
 import { EventsProvider } from './events';
 import { TilesProvider } from './tiles';
 
 export const MainProvider = ({ children }: any) => {
 	return (
 		<MapboxProvider>
-		<CircleProvider>
+		<FootprintProvider>
 		<EventsProvider>
 		<StylesProvider>
 		<TilesProvider>
@@ -19,7 +19,7 @@ export const MainProvider = ({ children }: any) => {
 		</TilesProvider>
 		</StylesProvider>
 		</EventsProvider>
-		</CircleProvider>
+		</FootprintProvider>
     	</MapboxProvider>
 	)
 }

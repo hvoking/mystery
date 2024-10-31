@@ -1,16 +1,16 @@
 // Context imports
-import { useCircle } from '../../../context/circle';
+import { useFootprint } from '../../../context/footprint';
 
 // Third-party imports
 import { Source, Layer, LayerProps } from 'react-map-gl';
 
-export const Mask = () => {
-    const { markGeometries } = useCircle();
+export const Footprint = () => {
+    const { footprintData } = useFootprint();
 
     const marksLayer: LayerProps = {
-        id: 'mask-layer',
+        id: 'footprint-layer',
         type: 'fill',
-        source: 'mask',
+        source: 'footprint',
         paint: {
             'fill-color': 'rgb(204, 255, 41)',
             'fill-opacity': 0.2,
@@ -19,14 +19,14 @@ export const Mask = () => {
 
     const geojson = {
         type: 'FeatureCollection',
-        features: markGeometries.map((geometry: any) => geometry)
+        features: footprintData.map((geometry: any) => geometry)
     };
 
     return (
-        <Source id="mask" type="geojson" data={geojson}>
+        <Source id="footprint" type="geojson" data={geojson}>
             <Layer {...marksLayer} />
         </Source>
     );
 };
 
-Mask.displayName = "Mask";
+Footprint.displayName = "Footprint";
