@@ -6,8 +6,8 @@ import { Footprint } from './footprint';
 import './styles.scss';
 
 // Context imports
-import { useMapbox } from '../../context/mapbox';
-import { useEvents } from '../../context/events';
+import { useMapbox } from 'context/mapbox';
+import { useEvents } from 'context/events';
 
 // Third-party imports
 import { Map } from 'react-map-gl';

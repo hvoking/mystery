@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 
 // Context imports
-import { useMapbox } from '../../../context/mapbox';
+import { useMapbox } from 'context/mapbox';
 
 // Third-party imports
 import { Marker } from 'react-map-gl';

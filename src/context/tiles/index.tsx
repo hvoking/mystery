@@ -25,7 +25,6 @@ export const TilesProvider = ({children}: any) => {
 	const floorZoom = Math.floor(zoom);
 
 	const { xTile, yTile } = lonLatToTile(longitude, latitude, floorZoom)
-
 	
 	const fetchTiles = async (tableSchema: any, tableName: any) => {
 		const promises = [];

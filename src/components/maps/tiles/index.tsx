@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
 
 // Context imports
-import { useTiles } from '../../../context/tiles';
-import { useStyles } from '../../../context/styles';
-import { useMapbox } from '../../../context/mapbox';
+import { useTiles } from 'context/tiles';
+import { useStyles } from 'context/styles';
+import { useMapbox } from 'context/mapbox';
 
 // Third party imports
 import { Source, Layer } from 'react-map-gl';
+
+const tableSchema = "layers";
+const tableName = "jan";
 
 export const Tiles = () => {
 	const { fetchTiles } = useTiles();
@@ -15,9 +18,6 @@ export const Tiles = () => {
 
 	const [ styleData, setStyleData ] = useState<any[]>([]);
 	const [ tilesData, setTilesData ] = useState<any>(null);
-
-	const tableSchema = "layers";
-	const tableName = "jan";
 
     useEffect(() => {
     	const loadData = async () => {
@@ -33,7 +33,7 @@ export const Tiles = () => {
 			setTilesData(tiles);
 		}
 		loadData();
-	}, [viewport]);
+	}, [ viewport ]);
 
 	const transformStyles = (styles: any) => {
 		return styles.map((style: any) => {

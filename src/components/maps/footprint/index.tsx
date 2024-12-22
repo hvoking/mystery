@@ -1,5 +1,5 @@
 // Context imports
-import { useFootprint } from '../../../context/footprint';
+import { useFootprint } from 'context/footprint';
 
 // Third-party imports
 import { Source, Layer, LayerProps } from 'react-map-gl';

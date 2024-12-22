@@ -1,12 +1,15 @@
 // App imports
-import { Main } from './components/main';
+import { Main } from 'components';
+import { MainProvider } from 'context';
 import './styles.scss';
 
 export const App = () => {
   return (
-    <div className="App">
-      <Main/>
-    </div>
+    <MainProvider>
+      <div className="App">
+        <Main/>
+      </div>
+    </MainProvider>
   );
 }
 

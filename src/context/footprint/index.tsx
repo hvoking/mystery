@@ -18,11 +18,12 @@ export const useFootprint = () => {
 export const FootprintProvider = ({children}: any) => {
 	const { viewport } = useMapbox();
 	const { latitude, longitude } = viewport;
+	const center = [ longitude, latitude ];
 
 	const [ circleRadius, setCircleRadius ] = useState(0.05);
 	const [ footprintData, setFootprintData ] = useState<any[]>([]);
 	
-	const circleGeometry: any = turf.circle([longitude, latitude], circleRadius);
+	const circleGeometry: any = turf.circle(center, circleRadius);
 
 	useEffect(() => {
 		setFootprintData((prev) => [...prev, circleGeometry]);
